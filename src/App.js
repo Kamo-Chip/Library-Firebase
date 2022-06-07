@@ -1,23 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import Library from "./components/Library";
+import Header from "./components/Header";
+import BookForm from "./components/BookForm";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { updateDoc } from 'firebase/firestore';
 
 function App() {
+  const [ books, setBooks ] = useState([]);
+
+  const updateLibrary = (newLibrary) => {
+    setBooks(newLibrary);
+  }
+
+  useEffect(() => {
+    
+  }, [books]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Library books={books} setBooks={updateLibrary}/>}/>
+          <Route path="/form" element={<BookForm books={books} setBooks={updateLibrary}/>}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

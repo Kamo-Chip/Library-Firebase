@@ -1,38 +1,173 @@
-.App {
+* {
+  box-sizing: border-box;
+}
+
+:root { 
+  --body-background: #dcbe87;
+  --btn-background: #ef5d58;
+  --form-background: #517174;
+  --error: red;
+}
+
+body{
+  background: var(--body-background);
+}
+
+header {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+button {
+  border-radius: 20px;
+  border: solid 2px #000;
+  margin-bottom: .5em;
+  font-size: 1.5rem;
+  width: 106px;
+  background: var(--btn-background);
+  color: #000;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+button:hover {
+  background: #fff;
+  transition: 200ms ease-in;
 }
+/*Library*/
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.library-container{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 100vw;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-add {
+  margin-top: 50px;
+  background: var(--btn-background);
+  width: fit-content;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.sort-container {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  margin: auto 0;
+  margin-left: 1em;
+}
+
+.book-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--form-background);
+  width: 30%;
+  height: 500px;
+  margin: 0 auto;
+}
+
+.book-form label {
+  font-size: 1.5rem;
+}
+
+.book-form section {
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.book-form button {
+  margin-top: 5rem;
+}
+input { 
+  font-size: 2rem;
+  margin-bottom: 2em;
+}
+.input-page {
+  width: 5rem;
+  position: absolute;
+  margin-left: 3.8em;
+
+}
+
+.books-container {
+  display: grid;
+  height: fit-content;
+  align-items: center;
+  justify-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  width: 60%;
+}
+
+.book{
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  align-self: center;
+  align-items: center;
+  justify-content: space-evenly;
+  background: var(--form-background);
+  height: auto;
+  width: 250px;
+  text-align: center;
+  margin-top: 1em;
+}
+
+.book, .book-form {
+  border-radius: 10px;
+  border: solid 2px #000;
+}
+.book:hover {
+  box-shadow: 5px 5px #000;
+}
+
+.book h2 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.book div {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  align-self: center;
+  align-items: center;
+}
+
+.btn-read{
+  background: rgb(82, 200, 240);
+}
+
+.btn-remove {
+  background: orange;
+}
+
+@media screen and (max-width: 1024px) {
+  .books-container {
+    grid-gap: .5em;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@media screen and (max-width: 768px) {
+  .sort-container {
+    display: none;
+  }
+
+  .books-container {
+    grid-template-columns: repeat(2, 1fr);
+    width: 80%;
+    grid-gap:0;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .books-container {
+    widows: 95%;
+  }
+
+  .book {
+    width: 150px;
   }
 }
