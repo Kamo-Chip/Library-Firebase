@@ -1,10 +1,12 @@
 import Book from "./Book";
 import { Link } from "react-router-dom";
-import { db } from "../firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { collection, getDocs , query, orderBy } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 const Library = ({books, setBooks }) => {
+    const { currentUser } = auth;
+
     const getBooks = async () => {
         await getDocs(collection(db, "books"))
         .then(docs => {
