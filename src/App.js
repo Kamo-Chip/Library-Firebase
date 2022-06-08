@@ -2,9 +2,12 @@ import './App.css';
 import Library from "./components/Library";
 import Header from "./components/Header";
 import BookForm from "./components/BookForm";
+import Register from "./components/Register";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { useEffect, useState } from 'react';
-import { updateDoc } from 'firebase/firestore';
+import React, { useEffect, useState, useContext,} from 'react';
+import Login from './components/Login';
+import { auth } from "./firebase";
+import { onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const [ books, setBooks ] = useState([]);
@@ -22,8 +25,10 @@ function App() {
       <Header/>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Library books={books} setBooks={updateLibrary}/>}/>
+          <Route path="/" element={<Register/>} />
+          <Route path="/library" element={<Library books={books} setBooks={updateLibrary}/>}/>
           <Route path="/form" element={<BookForm books={books} setBooks={updateLibrary}/>}/>
+          <Route path="/login" element={<Login/>}/>
         </Routes>
       </BrowserRouter>
     </div>
