@@ -1,38 +1,62 @@
-import { db } from "../firebase";
-import { doc, deleteDoc, getDocs, collection, updateDoc } from "firebase/firestore";
-import { useState } from "react";
+import { db, auth } from "../firebase";
+import { doc, deleteDoc, getDoc, addDoc, collection, updateDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
-const Book = ({ book, books, setBooks }) => {
+const Book = ({ book, setBooks }) => {
     const [ currentBook, setCurrentBook ] = useState({...book});
 
-    const deleteBook = async () => {
-        await deleteDoc(doc(db, "books", book.id));
-        setCurrentBook(null);
+    const deleteBook = async (e) => {
+        await getDoc(doc(db, "users", auth.currentUser.uid))
+        .then(data => {
+            let books = [...data.data().books];
+            let updatedBooks = [];
 
-        const docs = await getDocs(collection(db, "books"))
-        let updatedBooks = []
-        docs.forEach((book) => {
-            updatedBooks.push(book.data());
-        });
-        
-        setBooks(updatedBooks);
+            books.forEach(element => {
+                if(element.id !== e.target.parentElement.parentElement.id){
+                    updatedBooks.push(element);
+                }
+            })
+            
+            setBooks(updatedBooks);
+
+            updateDoc(doc(db, "users", auth.currentUser.uid), {
+                books: updatedBooks,
+            });
+        })
+        .catch(err => console.log(err));
     }
 
-    const readBook = async () => {
-        await updateDoc(doc(db, "books", book.id), {
-            read: true,
-        });
+    const readBook = async (e) => {
+        await getDoc(doc(db, "users", auth.currentUser.uid))
+        .then(data => {
+            let books = [...data.data().books];
+
+            for(let i = 0; i < books.length; i++){
+                if(books[i].id === e.target.parentElement.parentElement.id){
+                    books[i].read = true;
+                }   
+            }
+            
+            setBooks(books);
+
+            updateDoc(doc(db, "users", auth.currentUser.uid), {
+                books: books,
+            });
+
+            setCurrentBook({...currentBook, read: true})
+        })
+        .catch(err => console.log(err));
     }
 
     return (
         <>
         { currentBook ? 
-            <div className="book">
+            <div id={currentBook.id} className="book">
                 <h2>{currentBook.title}</h2>
                 <small>{currentBook.author}</small>
-                <h1>{currentBook.numPages} pages</h1>
+                <h3>{currentBook.numPages} pages</h3>
                 <div>
-                    <button className="btn-read" onClick={readBook}>Read</button>
+                    <button className={`${currentBook.read ? "has-read" : "btn-read"}`} onClick={readBook}>Read</button>
                     <button className="btn-remove" onClick={deleteBook}>Remove</button>
                 </div>
             </div>

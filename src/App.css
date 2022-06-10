@@ -11,6 +11,7 @@
 
 body{
   background: var(--body-background);
+  overflow-x: hidden;
 }
 
 header {
@@ -31,7 +32,12 @@ button:hover {
   background: #fff;
   transition: 200ms ease-in;
 }
+
 /*Library*/
+
+.has-read {
+  background: rgb(0, 104, 241);;
+}
 
 .library-container{
   display: flex;
@@ -39,6 +45,7 @@ button:hover {
   align-items: center;
   justify-content: center;
   width: 100vw;
+  overflow: hidden;
 }
 
 .btn-add {
@@ -52,45 +59,43 @@ button:hover {
   display: flex;
   flex-direction: column;
   position: fixed;
+  left: 0;
+  top: 0;
   margin: auto 0;
   margin-left: 1em;
 }
 
-.book-form, .register, .login{
+.sort-btn-container button{
+  margin-left: .5em;
+}
+
+form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   background: var(--form-background);
-  width: 30%;
-  height: 500px;
+  height: fit-content;
   margin: 0 auto;
+  margin-top: 20vh;
+  max-width: 600px;
 }
 
-.book-form label {
+form section {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+section label {
+  text-align: left;
   font-size: 1.5rem;
 }
 
-.book-form section {
-  width: 95%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.book-form button {
-  margin-top: 5rem;
-}
 input { 
   font-size: 2rem;
   margin-bottom: 2em;
+  width: 90%;
 }
-.input-page {
-  width: 5rem;
-  position: absolute;
-  margin-left: 3.8em;
 
-}
 
 .books-container {
   display: grid;
@@ -109,13 +114,13 @@ input {
   align-items: center;
   justify-content: space-evenly;
   background: var(--form-background);
-  height: auto;
-  width: 250px;
+  height: inherit;
+  width: 280px;
   text-align: center;
   margin-top: 1em;
 }
 
-.book, .book-form {
+.book, form {
   border-radius: 10px;
   border: solid 2px #000;
 }
@@ -144,30 +149,52 @@ input {
   background: orange;
 }
 
-@media screen and (max-width: 1024px) {
-  .books-container {
-    grid-gap: .5em;
-  }
-}
-
 @media screen and (max-width: 768px) {
-  .sort-container {
-    display: none;
+  .sort-container{
+    position: relative;
+    align-self: center;
+    text-align: center;
   }
 
   .books-container {
-    grid-template-columns: repeat(2, 1fr);
-    width: 80%;
-    grid-gap:0;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .books-container {
-    widows: 95%;
+    width: 90vw;
   }
 
   .book {
+    width: 180px;
+  }  
+}
+
+@media screen and (max-width: 425px) {
+  .books-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: .5em;
+  }
+
+  form {
+    width: 95vw;
+    padding: 0 .5em;
+  }
+}
+
+@media screen and (max-width: 375px){
+  .books-container {
+    width: 98vw;
+    grid-gap: .5em;
+  }
+
+  section label {
+    font-size: 1.2rem;
+  }
+
+  input {
+    font-size: 1.3rem;
+  }
+  .book {
     width: 150px;
+  }
+
+  .book h2 {
+    font-size: 2rem;
   }
 }

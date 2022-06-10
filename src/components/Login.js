@@ -30,13 +30,14 @@ const Login = () => {
     
     return (
         <form onSubmit={signIn} className="login">
+            <h2>Login</h2>
             <section>
                 <label>Email:</label>
-                <input type="email" name="email" onChange={handleChange} value={user.email}/>
+                <input type="email" name="email" onChange={handleChange} value={user.email} required={true}/>
             </section>
             <section>
                 <label htmlFor="password">Password:</label>
-                <input type="password" name="password" onChange={handleChange} value={user.password}/>
+                <input type="password" name="password" onChange={handleChange} value={user.password} required={true}/>
             </section>
             <button>Login</button>
             { user.error ? <p>{user.error}</p> : null}

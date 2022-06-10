@@ -6,8 +6,8 @@ import Register from "./components/Register";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React, { useEffect, useState, useContext,} from 'react';
 import Login from './components/Login';
-import { auth } from "./firebase";
-import { onAuthStateChanged } from 'firebase/auth';
+import { db } from "./firebase";
+import { addDoc, collection } from 'firebase/firestore';
 
 function App() {
   const [ books, setBooks ] = useState([]);
@@ -17,7 +17,6 @@ function App() {
   }
 
   useEffect(() => {
-    
   }, [books]);
 
   return (

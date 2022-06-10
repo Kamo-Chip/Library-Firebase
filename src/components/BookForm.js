@@ -1,15 +1,11 @@
-import { Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useState } from "react";
-import { db } from "../firebase";
-import { collection, doc, getDoc, addDoc, getDocs, updateDoc } from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-const BookForm = ({books, setBooks }) => {
+const BookForm = () => {
 
     const [ loading, setLoading ] = useState(false);
-
-    useState(() => {
-    
-    }, [books]);
 
     const navigate = useNavigate();
 
@@ -32,35 +28,29 @@ const BookForm = ({books, setBooks }) => {
 
         setLoading(true);
 
-        const ref  = await addDoc(collection(db, "books"), {
-            title: capitalise(e.target.title.value),
-            author: capitalise(e.target.author.value),
-            numPages: e.target.numPages.value,
-            read: false,
-        });
+        await getDoc(doc(db, "users", auth.currentUser.uid))
+        .then(data => {
+            let currentBooks = [...data.data().books];
+            currentBooks.push({
+                title: capitalise(e.target.title.value),
+                author: capitalise(e.target.author.value),
+                numPages: e.target.numPages.value,
+                id: (auth.currentUser.uid).concat(currentBooks.length),
+                read: false,
+            });
 
-        await updateDoc(doc(db, "books", ref.id), {
-            id: ref.id,
+            updateDoc(doc(db, "users", auth.currentUser.uid), {
+                books: currentBooks,
+            });
         })
+        .catch(err => console.log(err));
 
-        getBooks();
-
-        navigate("/");
-    }
-
-    const getBooks = async () => {
-        const snapShot = await getDocs(collection(db, "books"));
-        let books = [];
-
-        snapShot.forEach((doc) => {
-            books.push(doc.data());
-        });
-        
-        setBooks(books);
+        navigate("/library");
     }
 
     return (
         <form onSubmit={handleSubmit} className="book-form">
+            <h2>Enter book details</h2>
             <section>
                 <label htmlFor="title">Title</label>
                 <input type="text" name="title" required={true}/>

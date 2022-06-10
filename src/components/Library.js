@@ -1,62 +1,72 @@
 import Book from "./Book";
 import { Link } from "react-router-dom";
 import { db, auth } from "../firebase";
-import { collection, getDocs , query, orderBy } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { getDoc , doc } from "firebase/firestore";
+import { useEffect } from "react";
 
 const Library = ({books, setBooks }) => {
     const { currentUser } = auth;
-
     const getBooks = async () => {
-        await getDocs(collection(db, "books"))
+        await getDoc(doc(db, "users", currentUser.uid))
         .then(docs => {
-            let books = [];
-            docs.forEach(doc => {
-                books.push(doc.data());
-            });
-            setBooks(books);
-        });
+            setBooks(docs.data().books);
+        })
     }
 
     useEffect(() => {
         getBooks();
     }, []);
 
-    const sortByAuthor = async () => {
-        const q = await query(collection(db, "books"), orderBy("author", "asc"));
+    useEffect(() => {
+    }, [books]);
+
+    const sortByAuthor = () => {
+        if(books.length === 0){
+            return;
+        }
+        let booksToSort = [...books];
         
-        await getDocs(q)
-        .then(data => {
-            let sortedBooks = [];
-            data.forEach(d => {
-                sortedBooks.push(d.data());
-            });
-            setBooks(sortedBooks);
-        })
+        for(let i = 0; i < booksToSort.length; i++){
+            for(let j = i; j < booksToSort.length; j++){
+                if((booksToSort[i].author).localeCompare(booksToSort[j].author) > 0) {
+                    let temp = booksToSort[i];
+                    booksToSort[i] = booksToSort[j];
+                    booksToSort[j] = temp;
+                }
+            }
+        }
+        setBooks(booksToSort);
     }
 
-    const sortByTitle = async () => {
-        const q = await query(collection(db, "books"), orderBy("title", "asc"));
+    const sortByTitle = () => {
+        if(books.length === 0){
+            return;
+        }
+        let booksToSort = [...books];
 
-        await getDocs(q)
-        .then(doc => {
-            let sortedBooks = [];
-            doc.forEach(d => {
-                sortedBooks.push(d);
-            });
-            setBooks(sortedBooks);
-        })
+        for(let i = 0; i < booksToSort.length; i++){
+            for(let j = i; j < booksToSort.length; j++){
+                if(((booksToSort[i].title).localeCompare(booksToSort[j].title)) > 0) {
+                    let temp = booksToSort[i];
+                    booksToSort[i] = booksToSort[j];
+                    booksToSort[j] = temp;
+                }
+            }
+        }
+        setBooks(booksToSort);
     }
     
     return (
         <section className="library-container">
             <div className="sort-container">
                 <h2>Sort By</h2>
-                <button className="btn-sort" onClick={sortByTitle}>Title</button>
-                <button className="btn-sort" onClick={sortByAuthor}>Author</button>
+                <div className="sort-btn-container">
+                    <button className="btn-sort" onClick={sortByTitle}>Title</button>
+                    <button className="btn-sort" onClick={sortByAuthor}>Author</button>
+                </div>
             </div>
             <div className={`${books.length ? "books-container" : ""}`}>
-                {!books.length ? <p>Add some books</p> : books.map((book) => <Book key={book.id} book={book} setBooks={setBooks} books={books}/>)}
+                {!books.length ? <p>Add some books</p> : books.map((book) => <Book key={book.id} book={book} setBooks={setBooks}/>)}
             </div>
             <Link to="/form"><button className="btn-add">Add Book</button></Link>
         </section>
